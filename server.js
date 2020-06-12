@@ -37,6 +37,14 @@ app.post('/api/notes', async (req, res) => {
   res.json(newNote)
 })
 
+app.delete('/api/notes/:id', async (req, res) => {
+  const noteId = req.params.id;
+  const notes = JSON.parse(await readFile(DB_PATH, { encoding: 'utf-8' }))
+    .filter(note => note.id !== noteId)
+  await writeFile(DB_PATH, JSON.stringify(notes))
+  res.send('Deleted');
+})
+
 app.listen(PORT, () => {
   console.log('App is running at http://localhost:3000')
 })
