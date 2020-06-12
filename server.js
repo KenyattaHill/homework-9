@@ -4,8 +4,10 @@ const fs = require('fs')
 const util = require('util');
 const PORT = 3000
 const app = express();
+const uuid = require('uuid')
 
 const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
 const DB_PATH = path.resolve(__dirname, 'db', 'db.json')
 
 
@@ -24,6 +26,15 @@ app.get('/notes', (req, res) => {
 app.get('/api/notes', async (req, res) => {
   const notes = JSON.parse(await readFile(DB_PATH, {encoding: 'utf-8'}))
   res.json(notes)
+})
+
+app.post('/api/notes', async (req, res) => {
+  const newNote = req.body;
+  const notes = JSON.parse(await readFile(DB_PATH, { encoding: 'utf-8' }))
+  newNote.id = uuid.v4()
+  notes.push(newNote);
+  await writeFile(DB_PATH, JSON.stringify(notes))
+  res.json(newNote)
 })
 
 app.listen(PORT, () => {
