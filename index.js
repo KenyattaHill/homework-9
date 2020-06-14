@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs')
 const util = require('util');
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 const app = express();
 const uuid = require('uuid')
 
